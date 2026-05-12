@@ -4,9 +4,8 @@ using BooksApi.Services.Interfaces;
 
 namespace BooksApi.Controllers
 {
-  [ApiController]
   [Route("api/auth")]
-  public class AuthController : ControllerBase
+  public class AuthController : BaseController
   {
     private readonly IAuthService _authService;
 

@@ -5,7 +5,6 @@ using BooksApi.Services.Interfaces;
 
 namespace BooksApi.Controllers
 {
-  [ApiController]
   [Route("api/quotes")]
   [Authorize]
   public class QuotesController : BaseController
