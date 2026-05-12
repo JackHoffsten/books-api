@@ -1,17 +1,17 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-# Copy project files and restore dependencies
 COPY ["BooksApi.csproj", "./"]
 RUN dotnet restore "BooksApi.csproj"
 
-# Copy the rest of the source code and publish
 COPY . .
 RUN dotnet publish "BooksApi.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-# Runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
+
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
 COPY --from=build /app/publish .
 
 EXPOSE 80
