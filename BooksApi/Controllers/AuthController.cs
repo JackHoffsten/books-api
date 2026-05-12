@@ -27,7 +27,7 @@ namespace BooksApi.Controllers
       {
         return BadRequest(new { message = ex.Message });
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         return StatusCode(500, new { message = "An error occurred during registration" });
       }
@@ -45,7 +45,7 @@ namespace BooksApi.Controllers
       {
         return BadRequest(new { message = ex.Message });
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         return StatusCode(500, new { message = "An error occurred during login" });
       }

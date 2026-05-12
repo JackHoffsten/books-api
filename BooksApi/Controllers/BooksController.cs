@@ -26,7 +26,7 @@ namespace BooksApi.Controllers
         var books = await _bookService.GetBooksByUserIdAsync(userId);
         return Ok(books);
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         return StatusCode(500, new { message = "An error occurred while retrieving books" });
       }
@@ -47,7 +47,7 @@ namespace BooksApi.Controllers
 
         return Ok(book);
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         return StatusCode(500, new { message = "An error occurred while retrieving the book" });
       }
@@ -62,7 +62,7 @@ namespace BooksApi.Controllers
         var book = await _bookService.CreateBookAsync(userId, request);
         return CreatedAtAction(nameof(GetBook), new { id = book.Id }, book);
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         return StatusCode(500, new { message = "An error occurred while creating the book" });
       }
@@ -81,7 +81,7 @@ namespace BooksApi.Controllers
       {
         return NotFound(new { message = ex.Message });
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         return StatusCode(500, new { message = "An error occurred while updating the book" });
       }
@@ -100,7 +100,7 @@ namespace BooksApi.Controllers
       {
         return NotFound(new { message = ex.Message });
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         return StatusCode(500, new { message = "An error occurred while deleting the book" });
       }

@@ -26,7 +26,7 @@ namespace BooksApi.Controllers
         var quotes = await _quoteService.GetQuotesByUserIdAsync(userId);
         return Ok(quotes);
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         return StatusCode(500, new { message = "An error occurred while retrieving quotes" });
       }
@@ -47,7 +47,7 @@ namespace BooksApi.Controllers
 
         return Ok(quote);
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         return StatusCode(500, new { message = "An error occurred while retrieving the quote" });
       }
@@ -62,7 +62,7 @@ namespace BooksApi.Controllers
         var quote = await _quoteService.CreateQuoteAsync(userId, request);
         return CreatedAtAction(nameof(GetQuote), new { id = quote.Id }, quote);
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         return StatusCode(500, new { message = "An error occurred while creating the quote" });
       }
@@ -81,7 +81,7 @@ namespace BooksApi.Controllers
       {
         return NotFound(new { message = ex.Message });
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         return StatusCode(500, new { message = "An error occurred while updating the quote" });
       }
@@ -100,7 +100,7 @@ namespace BooksApi.Controllers
       {
         return NotFound(new { message = ex.Message });
       }
-      catch (Exception ex)
+      catch (Exception)
       {
         return StatusCode(500, new { message = "An error occurred while deleting the quote" });
       }
