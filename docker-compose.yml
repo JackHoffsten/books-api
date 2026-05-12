@@ -11,8 +11,10 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - ./db-data:/var/lib/postgresql/data
+    networks:
+      - books-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d ${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -32,9 +34,15 @@ services:
     ports:
       - "48525:80"
     restart: unless-stopped
+    networks:
+      - books-network
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
+
+networks:
+  books-network:
+    driver: bridge
