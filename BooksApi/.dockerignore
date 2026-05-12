@@ -1,0 +1,58 @@
+# Git
+.git
+.gitignore
+.github
+
+# Environment files
+.env
+.env.example
+.env.local
+.env.*.local
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+# IDE and editors
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+*.iml
+*.sln
+*.csproj.user
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# .NET build artifacts 
+**/bin/
+**/obj/
+**/out/
+
+# Test artifacts
+**/TestResults/
+**/coverage/
+*.test
+*.out
+.coverage
+coverage.html
+*.prof
+
+# Development
+node_modules/
+vendor/
+.cache/
+dist/
+build/
+logs/
+*.log
+
+# Documentation
+README.md
+LICENSE
+*.md
