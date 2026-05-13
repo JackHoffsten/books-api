@@ -33,7 +33,8 @@ namespace BooksApi.Services
         Text = request.Text,
         Author = request.Author,
         UserId = userId,
-        CreatedAt = DateTime.UtcNow
+        CreatedAt = DateTime.UtcNow,
+        UpdatedAt = DateTime.UtcNow
       };
 
       var createdQuote = await _quoteRepository.CreateQuoteAsync(quote);
@@ -74,6 +75,7 @@ namespace BooksApi.Services
         Text = quote.Text,
         Author = quote.Author,
         CreatedAt = quote.CreatedAt,
+        UpdatedAt = quote.UpdatedAt,
         UserId = quote.UserId
       };
     }

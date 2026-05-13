@@ -35,7 +35,8 @@ namespace BooksApi.Services
         PublishedDate = request.PublishedDate,
         Description = request.Description,
         UserId = userId,
-        CreatedAt = DateTime.UtcNow
+        CreatedAt = DateTime.UtcNow,
+        UpdatedAt = DateTime.UtcNow
       };
 
       var createdBook = await _bookRepository.CreateBookAsync(book);
@@ -54,7 +55,7 @@ namespace BooksApi.Services
       book.Author = request.Author;
       book.PublishedDate = request.PublishedDate;
       book.Description = request.Description;
-
+      book.UpdatedAt = DateTime.UtcNow;
       var updatedBook = await _bookRepository.UpdateBookAsync(book);
       return MapToResponse(updatedBook);
     }
@@ -80,6 +81,7 @@ namespace BooksApi.Services
         PublishedDate = book.PublishedDate,
         Description = book.Description,
         CreatedAt = book.CreatedAt,
+        UpdatedAt = book.UpdatedAt,
         UserId = book.UserId
       };
     }

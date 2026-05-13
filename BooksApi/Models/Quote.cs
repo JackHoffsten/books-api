@@ -6,6 +6,7 @@ namespace BooksApi.Models
     public string Text { get; set; } = string.Empty;
     public string Author { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     public int UserId { get; set; }
     public User User { get; set; } = null!;
   }
