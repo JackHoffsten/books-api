@@ -20,8 +20,14 @@ namespace BooksApi.Services
 
     public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
     {
-      var existingUser = await _userRepository.GetUserByUsernameAsync(request.Username);
-      if (existingUser != null)
+      var existingUserByEmail = await _userRepository.GetUserByEmailAsync(request.Email);
+      if (existingUserByEmail != null)
+      {
+        throw new InvalidOperationException("Email already in use");
+      }
+
+      var existingUserByUsername = await _userRepository.GetUserByUsernameAsync(request.Username);
+      if (existingUserByUsername != null)
       {
         throw new InvalidOperationException("Username already exists");
       }
