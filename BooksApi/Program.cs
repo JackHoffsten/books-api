@@ -7,6 +7,7 @@ using BooksApi.Repositories.Interfaces;
 using BooksApi.Repositories;
 using BooksApi.Services.Interfaces;
 using BooksApi.Services;
+using BooksApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -109,6 +110,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowAll");
+app.UseMiddleware<GlobalExceptionHandler>();
 app.UseAuthentication();
 app.UseAuthorization();
 

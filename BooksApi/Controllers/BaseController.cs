@@ -16,23 +16,5 @@ namespace BooksApi.Controllers
       }
       return userId;
     }
-    protected ProblemDetails CreateErrorResponse(Exception ex, string? code = null)
-    {
-      var apiException = ex as ApiException;
-      var statusCode = apiException?.StatusCode ?? 500;
-      var errorCode = code ?? apiException?.Code ?? "INTERNAL_ERROR";
-
-      return new ProblemDetails
-      {
-        Title = "Error",
-        Detail = ex.Message,
-        Status = statusCode,
-        Extensions =
-        {
-          ["code"] = errorCode,
-          ["timestamp"] = DateTime.UtcNow
-        }
-      };
-    }
   }
 }

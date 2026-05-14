@@ -18,37 +18,15 @@ namespace BooksApi.Controllers
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
-      try
-      {
-        var response = await _authService.RegisterAsync(request);
-        return Ok(response);
-      }
-      catch (ApiException ex)
-      {
-        return BadRequest(CreateErrorResponse(ex));
-      }
-      catch (Exception ex)
-      {
-        return StatusCode(500, CreateErrorResponse(ex));
-      }
+      var response = await _authService.RegisterAsync(request);
+      return Ok(response);
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
-      try
-      {
-        var response = await _authService.LoginAsync(request);
-        return Ok(response);
-      }
-      catch (ApiException ex)
-      {
-        return BadRequest(CreateErrorResponse(ex));
-      }
-      catch (Exception ex)
-      {
-        return StatusCode(500, CreateErrorResponse(ex));
-      }
+      var response = await _authService.LoginAsync(request);
+      return Ok(response);
     }
   }
 }

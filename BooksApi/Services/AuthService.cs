@@ -21,6 +21,24 @@ namespace BooksApi.Services
 
     public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
     {
+      request.Username = request.Username.Trim();
+      request.Email = request.Email.Trim().ToLower();
+
+      if (request.Username.Length == 0)
+      {
+        throw new UsernameEmptyException();
+      }
+
+      if (request.Email.Length == 0)
+      {
+        throw new EmailEmptyException();
+      }
+
+      if (request.Password.Length < AuthConstants.MinPasswordLength) 
+      {
+        throw new PasswordTooShortException();
+      }
+
       var existingUserByEmail = await _userRepository.GetUserByEmailAsync(request.Email);
       if (existingUserByEmail != null)
       {
@@ -57,6 +75,8 @@ namespace BooksApi.Services
 
     public async Task<AuthResponse> LoginAsync(LoginRequest request)
     {
+      request.Username = request.Username.Trim();
+
       var user = await _userRepository.GetUserByUsernameAsync(request.Username);
       if (user == null)
       {
