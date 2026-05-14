@@ -1,4 +1,5 @@
 using BooksApi.DTOs.Auth;
+using BooksApi.Exceptions;
 using BooksApi.Models;
 using BooksApi.Repositories.Interfaces;
 using BooksApi.Services.Interfaces;
@@ -23,13 +24,13 @@ namespace BooksApi.Services
       var existingUserByEmail = await _userRepository.GetUserByEmailAsync(request.Email);
       if (existingUserByEmail != null)
       {
-        throw new InvalidOperationException("Email already in use");
+        throw new EmailTakenException();
       }
 
       var existingUserByUsername = await _userRepository.GetUserByUsernameAsync(request.Username);
       if (existingUserByUsername != null)
       {
-        throw new InvalidOperationException("Username already exists");
+        throw new UsernameTakenException();
       }
 
       var user = new User
@@ -59,12 +60,12 @@ namespace BooksApi.Services
       var user = await _userRepository.GetUserByUsernameAsync(request.Username);
       if (user == null)
       {
-        throw new InvalidOperationException("Invalid username or password");
+        throw new InvalidCredentialsException();
       }
 
       if (!_passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
       {
-        throw new InvalidOperationException("Invalid username or password");
+        throw new InvalidCredentialsException();
       }
 
       var token = _tokenService.GenerateToken(user.Id, user.Username);

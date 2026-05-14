@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using BooksApi.DTOs.Auth;
 using BooksApi.Services.Interfaces;
+using BooksApi.Exceptions;
 
 namespace BooksApi.Controllers
 {
@@ -22,13 +23,13 @@ namespace BooksApi.Controllers
         var response = await _authService.RegisterAsync(request);
         return Ok(response);
       }
-      catch (InvalidOperationException ex)
+      catch (ApiException ex)
       {
-        return BadRequest(new { message = ex.Message });
+        return BadRequest(CreateErrorResponse(ex));
       }
-      catch (Exception)
+      catch (Exception ex)
       {
-        return StatusCode(500, new { message = "An error occurred during registration" });
+        return StatusCode(500, CreateErrorResponse(ex));
       }
     }
 
@@ -40,13 +41,13 @@ namespace BooksApi.Controllers
         var response = await _authService.LoginAsync(request);
         return Ok(response);
       }
-      catch (InvalidOperationException ex)
+      catch (ApiException ex)
       {
-        return BadRequest(new { message = ex.Message });
+        return BadRequest(CreateErrorResponse(ex));
       }
-      catch (Exception)
+      catch (Exception ex)
       {
-        return StatusCode(500, new { message = "An error occurred during login" });
+        return StatusCode(500, CreateErrorResponse(ex));
       }
     }
   }
