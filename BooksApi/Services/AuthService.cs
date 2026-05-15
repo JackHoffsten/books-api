@@ -1,5 +1,5 @@
 using BooksApi.DTOs.Auth;
-using BooksApi.Exceptions;
+using BooksApi.Exceptions.Auth;
 using BooksApi.Models;
 using BooksApi.Repositories.Interfaces;
 using BooksApi.Services.Interfaces;
@@ -34,7 +34,7 @@ namespace BooksApi.Services
         throw new EmailEmptyException();
       }
 
-      if (request.Password.Length < AuthConstants.MinPasswordLength) 
+      if (request.Password.Length < AuthConstants.MinPasswordLength)
       {
         throw new PasswordTooShortException();
       }

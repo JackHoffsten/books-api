@@ -1,4 +1,5 @@
 using BooksApi.Exceptions;
+using BooksApi.Exceptions.Auth;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -12,8 +13,9 @@ namespace BooksApi.Controllers
       var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
       if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
       {
-        throw new UnauthorizedAccessException("User ID not found in token");
+        throw new UnauthorizedException();
       }
+
       return userId;
     }
   }

@@ -1,4 +1,4 @@
-namespace BooksApi.Exceptions
+namespace BooksApi.Exceptions.Auth
 {
   public class UsernameTakenException : ApiException
   {

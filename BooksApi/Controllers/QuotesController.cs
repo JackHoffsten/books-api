@@ -21,6 +21,7 @@ namespace BooksApi.Controllers
     {
       var userId = GetUserId();
       var quotes = await _quoteService.GetQuotesByUserIdAsync(userId);
+
       return Ok(quotes);
     }
 
@@ -28,12 +29,7 @@ namespace BooksApi.Controllers
     public async Task<IActionResult> GetQuote(int id)
     {
       var userId = GetUserId();
-      var quote = await _quoteService.GetQuoteByIdAsync(id);
-
-      if (quote == null || quote.UserId != userId)
-      {
-        return NotFound(new { message = "Quote not found" });
-      }
+      var quote = await _quoteService.GetQuoteByIdAsync(id, userId);
 
       return Ok(quote);
     }
@@ -43,6 +39,7 @@ namespace BooksApi.Controllers
     {
       var userId = GetUserId();
       var quote = await _quoteService.CreateQuoteAsync(userId, request);
+
       return CreatedAtAction(nameof(GetQuote), new { id = quote.Id }, quote);
     }
 
@@ -51,6 +48,7 @@ namespace BooksApi.Controllers
     {
       var userId = GetUserId();
       var quote = await _quoteService.UpdateQuoteAsync(id, userId, request);
+
       return Ok(quote);
     }
 
@@ -59,6 +57,7 @@ namespace BooksApi.Controllers
     {
       var userId = GetUserId();
       await _quoteService.DeleteQuoteAsync(id, userId);
+
       return NoContent();
     }
   }

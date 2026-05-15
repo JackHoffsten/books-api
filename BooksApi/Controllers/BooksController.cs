@@ -21,6 +21,7 @@ namespace BooksApi.Controllers
     {
       var userId = GetUserId();
       var books = await _bookService.GetBooksByUserIdAsync(userId);
+
       return Ok(books);
     }
 
@@ -28,12 +29,7 @@ namespace BooksApi.Controllers
     public async Task<IActionResult> GetBook(int id)
     {
       var userId = GetUserId();
-      var book = await _bookService.GetBookByIdAsync(id);
-
-      if (book == null || book.UserId != userId)
-      {
-        return NotFound(new { message = "Book not found" });
-      }
+      var book = await _bookService.GetBookByIdAsync(id, userId);
 
       return Ok(book);
     }
@@ -43,6 +39,7 @@ namespace BooksApi.Controllers
     {
       var userId = GetUserId();
       var book = await _bookService.CreateBookAsync(userId, request);
+
       return CreatedAtAction(nameof(GetBook), new { id = book.Id }, book);
     }
 
@@ -51,6 +48,7 @@ namespace BooksApi.Controllers
     {
       var userId = GetUserId();
       var book = await _bookService.UpdateBookAsync(id, userId, request);
+
       return Ok(book);
     }
 

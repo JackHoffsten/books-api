@@ -1,4 +1,5 @@
 using BooksApi.DTOs.Quotes;
+using BooksApi.Exceptions.Quote;
 using BooksApi.Models;
 using BooksApi.Repositories.Interfaces;
 using BooksApi.Services.Interfaces;
@@ -20,10 +21,15 @@ namespace BooksApi.Services
       return quotes.Select(MapToResponse).ToList();
     }
 
-    public async Task<QuoteResponse?> GetQuoteByIdAsync(int id)
+    public async Task<QuoteResponse> GetQuoteByIdAsync(int id, int userId)
     {
       var quote = await _quoteRepository.GetQuoteByIdAsync(id);
-      return quote != null ? MapToResponse(quote) : null;
+      if (quote == null || quote.UserId != userId)
+      {
+        throw new QuoteNotFoundException();
+      }
+
+      return MapToResponse(quote);
     }
 
     public async Task<QuoteResponse> CreateQuoteAsync(int userId, CreateQuoteRequest request)
@@ -46,7 +52,7 @@ namespace BooksApi.Services
       var quote = await _quoteRepository.GetQuoteByIdAsync(id);
       if (quote == null || quote.UserId != userId)
       {
-        throw new InvalidOperationException("Quote not found or unauthorized");
+        throw new QuoteNotFoundException();
       }
 
       quote.Text = request.Text;
@@ -61,7 +67,7 @@ namespace BooksApi.Services
       var quote = await _quoteRepository.GetQuoteByIdAsync(id);
       if (quote == null || quote.UserId != userId)
       {
-        throw new InvalidOperationException("Quote not found or unauthorized");
+        throw new QuoteNotFoundException();
       }
 
       await _quoteRepository.DeleteQuoteAsync(id);

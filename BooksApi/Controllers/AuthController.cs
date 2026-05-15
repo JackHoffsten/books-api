@@ -19,6 +19,7 @@ namespace BooksApi.Controllers
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
       var response = await _authService.RegisterAsync(request);
+
       return Ok(response);
     }
 
@@ -26,6 +27,7 @@ namespace BooksApi.Controllers
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
       var response = await _authService.LoginAsync(request);
+
       return Ok(response);
     }
   }

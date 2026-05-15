@@ -1,5 +1,5 @@
 using System.Text.Json;
-using BooksApi.Exceptions;
+using BooksApi.Exceptions.Auth;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BooksApi.Middleware
@@ -113,7 +113,7 @@ namespace BooksApi.Middleware
             Status = 500,
             Extensions =
             {
-              ["code"] = "INTERNAL_ERROR",
+              ["code"] = ErrorCode.INTERNAL_SERVER_ERROR,
               ["timestamp"] = DateTime.UtcNow
             }
           };

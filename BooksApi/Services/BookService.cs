@@ -1,4 +1,5 @@
 using BooksApi.DTOs.Books;
+using BooksApi.Exceptions.Book;
 using BooksApi.Models;
 using BooksApi.Repositories.Interfaces;
 using BooksApi.Services.Interfaces;
@@ -20,10 +21,16 @@ namespace BooksApi.Services
       return books.Select(MapToResponse).ToList();
     }
 
-    public async Task<BookResponse?> GetBookByIdAsync(int id)
+    public async Task<BookResponse> GetBookByIdAsync(int id, int userId)
     {
       var book = await _bookRepository.GetBookByIdAsync(id);
-      return book != null ? MapToResponse(book) : null;
+
+      if (book == null || book.UserId != userId)
+      {
+        throw new BookNotFoundException();
+      }
+
+      return MapToResponse(book);
     }
 
     public async Task<BookResponse> CreateBookAsync(int userId, CreateBookRequest request)
@@ -32,7 +39,7 @@ namespace BooksApi.Services
       {
         Title = request.Title,
         Author = request.Author,
-        PublishedDate = request.PublishedDate,
+        PublishedDate = request.PublishedDate.ToUniversalTime(),
         Description = request.Description,
         UserId = userId,
         CreatedAt = DateTime.UtcNow,
@@ -48,12 +55,12 @@ namespace BooksApi.Services
       var book = await _bookRepository.GetBookByIdAsync(id);
       if (book == null || book.UserId != userId)
       {
-        throw new InvalidOperationException("Book not found or unauthorized");
+        throw new BookNotFoundException();
       }
 
       book.Title = request.Title;
       book.Author = request.Author;
-      book.PublishedDate = request.PublishedDate;
+      book.PublishedDate = request.PublishedDate.ToUniversalTime();
       book.Description = request.Description;
       book.UpdatedAt = DateTime.UtcNow;
       var updatedBook = await _bookRepository.UpdateBookAsync(book);
@@ -65,7 +72,7 @@ namespace BooksApi.Services
       var book = await _bookRepository.GetBookByIdAsync(id);
       if (book == null || book.UserId != userId)
       {
-        throw new InvalidOperationException("Book not found or unauthorized");
+        throw new BookNotFoundException();
       }
 
       await _bookRepository.DeleteBookAsync(id);
