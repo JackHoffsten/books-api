@@ -1,4 +1,5 @@
 using System.Text.Json;
+using BooksApi.Exceptions;
 using BooksApi.Exceptions.Auth;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,67 +32,11 @@ namespace BooksApi.Middleware
     {
       _logger.LogError(exception, "An error occurred: {Message}", exception.Message);
 
-      var problemDetails = new ProblemDetails();
+      ProblemDetails problemDetails;
 
       switch (exception)
       {
-        case UsernameEmptyException ex:
-          problemDetails = new ProblemDetails
-          {
-            Title = ex.Title,
-            Detail = ex.Message,
-            Status = ex.StatusCode,
-            Extensions =
-            {
-              ["code"] = ex.Code,
-              ["timestamp"] = DateTime.UtcNow
-            }
-          };
-          context.Response.StatusCode = ex.StatusCode;
-          break;
-        case EmailEmptyException ex:
-          problemDetails = new ProblemDetails
-          {
-            Title = ex.Title,
-            Detail = ex.Message,
-            Status = ex.StatusCode,
-            Extensions =
-            {
-              ["code"] = ex.Code,
-              ["timestamp"] = DateTime.UtcNow
-            }
-          };
-          context.Response.StatusCode = ex.StatusCode;
-          break;
-        case UsernameTakenException ex:
-          problemDetails = new ProblemDetails
-          {
-            Title = ex.Title,
-            Detail = ex.Message,
-            Status = ex.StatusCode,
-            Extensions =
-            {
-              ["code"] = ex.Code,
-              ["timestamp"] = DateTime.UtcNow
-            }
-          };
-          context.Response.StatusCode = ex.StatusCode;
-          break;
-        case EmailTakenException ex:
-          problemDetails = new ProblemDetails
-          {
-            Title = ex.Title,
-            Detail = ex.Message,
-            Status = ex.StatusCode,
-            Extensions =
-            {
-              ["code"] = ex.Code,
-              ["timestamp"] = DateTime.UtcNow
-            }
-          };
-          context.Response.StatusCode = ex.StatusCode;
-          break;
-        case InvalidCredentialsException ex:
+        case ApiException ex:
           problemDetails = new ProblemDetails
           {
             Title = ex.Title,
