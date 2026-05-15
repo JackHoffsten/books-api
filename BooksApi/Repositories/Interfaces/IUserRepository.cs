@@ -7,7 +7,8 @@ namespace BooksApi.Repositories.Interfaces
     Task<User?> GetUserByEmailAsync(string email);
     Task<User?> GetUserByUsernameAsync(string username);
     Task<User?> GetUserByIdAsync(int id);
-    Task<User> CreateUserAsync(User user);
+    Task<User?> GetUserByRefreshTokenAsync(string refreshToken);
+    Task<User> CreateOrUpdateUserAsync(User user);
     Task SaveChangesAsync();
   }
 }

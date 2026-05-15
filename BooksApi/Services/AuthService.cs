@@ -10,13 +10,15 @@ namespace BooksApi.Services
   {
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;
-    private readonly IJwtTokenService _tokenService;
+    private readonly IJwtTokenService _jwtTokenService;
+    private readonly IRefreshTokenService _refreshTokenService;
 
-    public AuthService(IUserRepository userRepository, IPasswordHasher passwordHasher, IJwtTokenService tokenService)
+    public AuthService(IUserRepository userRepository, IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService, IRefreshTokenService refreshTokenService)
     {
       _userRepository = userRepository;
       _passwordHasher = passwordHasher;
-      _tokenService = tokenService;
+      _jwtTokenService = jwtTokenService;
+      _refreshTokenService = refreshTokenService;
     }
 
     public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
@@ -60,17 +62,9 @@ namespace BooksApi.Services
         UpdatedAt = DateTime.UtcNow
       };
 
-      var createdUser = await _userRepository.CreateUserAsync(user);
+      var createdUser = await _userRepository.CreateOrUpdateUserAsync(user);
 
-      var token = _tokenService.GenerateToken(createdUser.Id, createdUser.Username);
-
-      return new AuthResponse
-      {
-        UserId = createdUser.Id,
-        Username = createdUser.Username,
-        Email = createdUser.Email,
-        Token = token
-      };
+      return await GetAuthResponseAsync(createdUser);
     }
 
     public async Task<AuthResponse> LoginAsync(LoginRequest request)
@@ -88,14 +82,42 @@ namespace BooksApi.Services
         throw new InvalidCredentialsException();
       }
 
-      var token = _tokenService.GenerateToken(user.Id, user.Username);
+      return await GetAuthResponseAsync(user);
+    }
+
+    public async Task<AuthResponse> RefreshTokenAsync(RefreshTokenRequest request)
+    {
+      var user = await _userRepository.GetUserByRefreshTokenAsync(request.RefreshToken);
+      if (user == null)
+      {
+        throw new InvalidRefreshTokenException();
+      }
+
+      if (user.RefreshTokenExpiry < DateTime.UtcNow)
+      {
+        throw new ExpiredRefreshTokenException();
+      }
+
+      return await GetAuthResponseAsync(user);
+    }
+
+    private async Task<AuthResponse> GetAuthResponseAsync(User user)
+    {
+      var accessToken = _jwtTokenService.GenerateToken(user);
+      var refreshToken = _refreshTokenService.GenerateToken();
+
+      user.RefreshToken = _refreshTokenService.HashToken(refreshToken);
+      user.RefreshTokenExpiry = _refreshTokenService.GetTokenExpiryDate();
+
+      await _userRepository.CreateOrUpdateUserAsync(user);
 
       return new AuthResponse
       {
         UserId = user.Id,
         Username = user.Username,
         Email = user.Email,
-        Token = token
+        AccessToken = accessToken,
+        RefreshToken = refreshToken
       };
     }
   }

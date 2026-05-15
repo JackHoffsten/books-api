@@ -29,10 +29,25 @@ namespace BooksApi.Repositories
       return await _context.Users.FindAsync(id);
     }
 
-    public async Task<User> CreateUserAsync(User user)
+    public async Task<User?> GetUserByRefreshTokenAsync(string refreshToken)
     {
-      _context.Users.Add(user);
+      return await _context.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
+    }
+
+    public async Task<User> CreateOrUpdateUserAsync(User user)
+    {
+      var existingUser = await GetUserByIdAsync(user.Id);
+
+      if (existingUser == null)
+      {
+        _context.Users.Add(user);
+      }
+      else
+      {
+        _context.Users.Update(user);
+      }
       await _context.SaveChangesAsync();
+
       return user;
     }
 

@@ -10,5 +10,7 @@ namespace BooksApi.Models
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     public List<Book> Books { get; set; } = new List<Book>();
     public List<Quote> Quotes { get; set; } = new List<Quote>();
+    public string? RefreshToken { get; set; }
+    public DateTime? RefreshTokenExpiry { get; set; }
   }
 }

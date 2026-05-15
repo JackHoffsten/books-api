@@ -3,6 +3,8 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using BooksApi.Services.Interfaces;
+using System.Security.Cryptography;
+using BooksApi.Models;
 
 namespace BooksApi.Services
 {
@@ -15,21 +17,21 @@ namespace BooksApi.Services
       _configuration = configuration;
     }
 
-    public string GenerateToken(int userId, string username)
+    public string GenerateToken(User user)
     {
       var secretKey = _configuration["Jwt:SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey not configured");
       var issuer = _configuration["Jwt:Issuer"] ?? "BooksApi";
       var audience = _configuration["Jwt:Audience"] ?? "BooksApi";
-      var expirationMinutes = int.Parse(_configuration["Jwt:ExpirationMinutes"] ?? "60");
+      var expirationMinutes = int.Parse(_configuration["Jwt:AccessTokenExpirationMinutes"] ?? "60");
 
       var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
       var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
       var claims = new[]
       {
-                new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-                new Claim(ClaimTypes.Name, username)
-            };
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        new Claim(ClaimTypes.Name, user.Username)
+      };
 
       var token = new JwtSecurityToken(
           issuer: issuer,
